@@ -1,0 +1,4 @@
+similarity(1.0).
+match([[Person],=,[Person]]).
+match([[Person,birthPlace],=,[Person,birthPlace]]).
+match([[Person,occupation],=,[Person,occupation]]).

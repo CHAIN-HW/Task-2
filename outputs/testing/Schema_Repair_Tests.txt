@@ -1,0 +1,8 @@
+Testing Results for Call_SPSM.java & Best_Match_Results.java
+
+Test 1
+Calling SPSM with source, conference(paper(title,review(date(day,month,year),author(name(first,second))))) & target, conference(paper(title,document(date(day,month,year),writer(name(first,second)))))
+Calling with threshold: 0.0 & limit: 2 
+Expected Result: repaired schema == 'conference(paper(title,document(date(day,month,year),writer(name(first,second)))))' 
+Actual Result: repaired schema == 'conference(paper(document(date(year,day,month),writer(name(first,second))),title))' 
+
