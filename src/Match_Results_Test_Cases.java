@@ -1,5 +1,4 @@
 import java.io.File;
-
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -25,6 +24,11 @@ public class Match_Results_Test_Cases {
 	
 	@BeforeClass
 	public static void beforeAll(){
+		System.out.println("These tests are responsible for testing from Best_Match_Results.java to make sure that when\n"
+				+"we pass in the results from SPSM, we get results that are over the threshold value that are sorted\n"
+				+"and only have n number of results as requested.");
+		System.out.println("\nThe results from these tests can be found in outputs/tests/Filter_Limit_Tests.txt\n");
+		
 		alreadyWritten=false;
 		counter=1;
 		
@@ -47,7 +51,7 @@ public class Match_Results_Test_Cases {
 			fOut = new PrintWriter(new FileWriter(testRes,true));
 			
 			if(alreadyWritten==false){
-				fOut.write("Testing Results for Best_Match_Results.java\n\n");
+				fOut.write("Testing Results for Match_Results_Test_Cases.java\n\n");
 				alreadyWritten = true;
 			}
 			
@@ -58,10 +62,12 @@ public class Match_Results_Test_Cases {
 	
 	@Test
 	public void emptyMatches(){
+		System.out.println("\nRunning test emptyMatches");
+		
 		ArrayList<Match_Struc> res = new ArrayList<Match_Struc>();
 		finalRes = methodCall.getThresholdAndFilter(res, 0.2, 0);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - empty matches\n");
 		fOut.write("Calling with threshold: "+0.2+" & limit: "+0+" on an empty list of matches \n");
 		
 		fOut.write("Expected Result: results.size() == 0 \n");
@@ -72,12 +78,14 @@ public class Match_Results_Test_Cases {
 	
 	@Test
 	public void singleSuccMatch(){
+		System.out.println("\nRunning test singleSuccMatch");
+		
 		ArrayList<Match_Struc> res = new ArrayList<Match_Struc>();
 		res.add(new Match_Struc(0.2,"author(name,document)"));
 		
 		finalRes = methodCall.getThresholdAndFilter(res, 0.1, 0);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - single success match\n");
 		fOut.write("Calling with threshold: "+0.1+" & limit: "+0+" on a single match \n");
 		
 		fOut.write("Expected Result: results.size() == 1 \n");
@@ -88,12 +96,14 @@ public class Match_Results_Test_Cases {
 	
 	@Test
 	public void singleFailMatch(){
+		System.out.println("\nRunning test singleFailMatch");
+		
 		ArrayList<Match_Struc> res = new ArrayList<Match_Struc>();
 		res.add(new Match_Struc(0.2,"author(name,document)"));
 		
 		finalRes = methodCall.getThresholdAndFilter(res, 0.5, 0 );
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - single fail match\n");
 		fOut.write("Calling with threshold: "+0.5+" & limit: "+0+" on a single match \n");
 		
 		fOut.write("Expected Result: results.size() == 0 \n");
@@ -104,6 +114,8 @@ public class Match_Results_Test_Cases {
 	
 	@Test
 	public void multiSuccMatch(){
+		System.out.println("\nRunning test multiSuccMatch");
+		
 		ArrayList<Match_Struc> res = new ArrayList<Match_Struc>();
 		res.add(new Match_Struc(0.2,"author(name,document)"));
 		res.add(new Match_Struc(0.7,"author(name,document)"));
@@ -113,7 +125,7 @@ public class Match_Results_Test_Cases {
 		
 		finalRes = methodCall.getThresholdAndFilter(res, 0.6, 0);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - multiple successes match\n");
 		fOut.write("Calling with threshold: "+0.6+" & limit: "+0+" on multiple matches \n");
 		
 		fOut.write("Expected Result: results.size() == 2 \n");
@@ -124,6 +136,8 @@ public class Match_Results_Test_Cases {
 	
 	@Test
 	public void multiSuccMatch2(){
+		System.out.println("\nRunning test multiSuccMatch2");
+		
 		ArrayList<Match_Struc> res = new ArrayList<Match_Struc>();
 		res.add(new Match_Struc(0.2,"author(name,document)"));
 		res.add(new Match_Struc(0.7,"author(name,document)"));
@@ -133,7 +147,7 @@ public class Match_Results_Test_Cases {
 		
 		finalRes = methodCall.getThresholdAndFilter(res, 0.2, 0);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - multiple successes match\n");
 		fOut.write("Calling with threshold: "+0.2+" & limit: "+0+" on multiple matches \n");
 		
 		fOut.write("Expected Result: results.size() == 4 \n");
@@ -144,6 +158,8 @@ public class Match_Results_Test_Cases {
 	
 	@Test
 	public void multiFailMatch(){
+		System.out.println("\nRunning test multiFailMatch");
+		
 		ArrayList<Match_Struc> res = new ArrayList<Match_Struc>();
 		res.add(new Match_Struc(0.2,"author(name,document)"));
 		res.add(new Match_Struc(0.7,"author(name,document)"));
@@ -153,7 +169,7 @@ public class Match_Results_Test_Cases {
 		
 		finalRes = methodCall.getThresholdAndFilter(res, 1.0, 0);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - multiple fail matches\n");
 		fOut.write("Calling with threshold: "+1.0+" & limit: "+0+" on multiple matches \n");
 		
 		fOut.write("Expected Result: results.size() == 0 \n");
@@ -164,6 +180,8 @@ public class Match_Results_Test_Cases {
 	
 	@Test
 	public void successWithLimit(){
+		System.out.println("\nRunning test successWithLimit");
+		
 		ArrayList<Match_Struc> res = new ArrayList<Match_Struc>();
 		res.add(new Match_Struc(0.2,"author(name,document)"));
 		res.add(new Match_Struc(0.7,"author(name,document)"));
@@ -173,7 +191,7 @@ public class Match_Results_Test_Cases {
 		
 		finalRes = methodCall.getThresholdAndFilter(res, 0.2, 3);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - success with limit\n");
 		fOut.write("Calling with threshold: "+0.2+" & limit: "+3+" on multiple matches \n");
 		
 		fOut.write("Expected Result: results.size() == 3 \n");
@@ -184,6 +202,8 @@ public class Match_Results_Test_Cases {
 	
 	@Test
 	public void successWithLargeLimit(){
+		System.out.println("\nRunning test successWithLargeLimit");
+		
 		ArrayList<Match_Struc> res = new ArrayList<Match_Struc>();
 		res.add(new Match_Struc(0.2,"author(name,document)"));
 		res.add(new Match_Struc(0.7,"author(name,document)"));
@@ -193,7 +213,7 @@ public class Match_Results_Test_Cases {
 		
 		finalRes = methodCall.getThresholdAndFilter(res, 0.2, 5);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - success with large limit\n");
 		fOut.write("Calling with threshold: "+0.2+" & limit: "+5+" on multiple matches \n");
 		
 		fOut.write("Expected Result: results.size() == 4 \n");
@@ -204,6 +224,8 @@ public class Match_Results_Test_Cases {
 	
 	@Test
 	public void failWithLimit(){
+		System.out.println("\nRunning test failWithLimit");
+		
 		ArrayList<Match_Struc> res = new ArrayList<Match_Struc>();
 		res.add(new Match_Struc(0.2,"author(name,document)"));
 		res.add(new Match_Struc(0.7,"author(name,document)"));
@@ -213,7 +235,7 @@ public class Match_Results_Test_Cases {
 		
 		finalRes = methodCall.getThresholdAndFilter(res, 1.0, 5);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - fail with limit\n");
 		fOut.write("Calling with threshold: "+1.0+" & limit: "+5+" on multiple matches \n");
 		
 		fOut.write("Expected Result: results.size() == 0 \n");

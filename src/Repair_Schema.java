@@ -6,6 +6,8 @@ import java.util.ArrayList;
  * and going through each one and creating a repaired schema
  * based on the relation between the source and target schemas
  * 
+ * This class is tested in Repair_Schema_Test_Cases.java
+ * 
  */
 public class Repair_Schema {
 	
@@ -14,24 +16,21 @@ public class Repair_Schema {
 	//below and the repaired schema will be produced
 	public static void main(String[] args){
 		Call_SPSM spsmCall;
-		Best_Match_Results filterResCall;
 		Repair_Schema queryCreator;
 		ArrayList<Match_Struc> finalRes;
 		String target, source;
 		
 		spsmCall = new Call_SPSM();
-		filterResCall = new Best_Match_Results();
 		queryCreator = new Repair_Schema();
 	
-		source = "conference(paper(title,review(date(day,month,year),author(name(first,second)))))";
-		target = "conference(paper(title,review(date(day,month,year),writer(name(first,second)))))";
+		source="conference(paper(title,review(date(day,month,year),author(name(first,second)))))";
+		target="conference(paper(title,document(category(day,month,year),writer(name(first,second)))))";
 		
 		finalRes = new ArrayList<Match_Struc>();
 		
 		finalRes = spsmCall.getSchemas(finalRes, source, target);
 		
 		if(finalRes != null && finalRes.size() != 0){
-			finalRes = filterResCall.getThresholdAndFilter(finalRes, 0.6, 0);
 			finalRes = queryCreator.prepare(finalRes);	
 			
 			//then check what we have stored as our repaired schemas

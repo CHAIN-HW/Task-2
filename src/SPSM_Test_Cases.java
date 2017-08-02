@@ -2,6 +2,7 @@ import java.io.*;
 
 import java.util.*;
 import org.junit.*;
+import org.junit.runners.MethodSorters;
 
 /*
  * Responsible for testing the output results from
@@ -9,6 +10,8 @@ import org.junit.*;
  * schemas and then calls SPSM before reading in
  * results as serialised object
  */
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SPSM_Test_Cases {
 	private Call_SPSM methodCaller;
 	private ArrayList<Match_Struc> results;
@@ -21,6 +24,10 @@ public class SPSM_Test_Cases {
 	
 	@BeforeClass
 	public static void beforeAll(){
+		System.out.println("These tests are responsible for testing the output results from Call_SPSM.java which takes in a source"
+							+"\nand target schema before calling SPSM and reading in the results as serialised objects.");
+		System.out.println("\nThe results from these tests can be found in outputs/tests/Call_SPSM_Tests.txt\n");
+		
 		alreadyWritten = false;
 		try{
 			testRes = new File("outputs/testing/Call_SPSM_Tests.txt");
@@ -41,7 +48,7 @@ public class SPSM_Test_Cases {
 			fOut = new PrintWriter(new FileWriter(testRes,true));
 			
 			if(alreadyWritten==false){
-				fOut.write("Testing Results for Call_SPSM.java\n\n");
+				fOut.write("Testing Results for SPSM_Test_Cases.java\n\n");
 				alreadyWritten = true;
 			}
 			
@@ -53,6 +60,8 @@ public class SPSM_Test_Cases {
 	@Test
 	//no source or target
 	public void test11() {
+		System.out.println("\nRunning test 1.1");
+		
 		source=""; 
 		target="";
 		
@@ -73,6 +82,8 @@ public class SPSM_Test_Cases {
 	@Test
 	//no target but one source
 	public void test21(){
+		System.out.println("\nRunning test 2.1");
+		
 		source="author(name)";
 		target="";
 		
@@ -92,6 +103,8 @@ public class SPSM_Test_Cases {
 	@Test
 	//no source but one target
 	public void test22(){
+		System.out.println("\nRunning test 2.2");
+		
 		source="";
 		target="author(name)";
 		
@@ -112,6 +125,8 @@ public class SPSM_Test_Cases {
 	@Test
 	//one source and one target
 	public void test23(){
+		System.out.println("\nRunning test 2.3");
+		
 		source="author(name)";
 		target="author(name)";
 		
@@ -137,6 +152,8 @@ public class SPSM_Test_Cases {
 	@Test
 	//one source w multiple targets
 	public void test24(){
+		System.out.println("\nRunning test 2.4");
+		
 		source="author(name)";
 		target="document(title,author) ; author(name,document) ; reviewAuthor(firstname,lastname,review)";
 		
@@ -146,7 +163,6 @@ public class SPSM_Test_Cases {
 		double[] simValues = {1.0,0.75};
 		
 		fOut.write("Test 2.4\n");
-		fOut.write("Calling SPSM with source, "+source + " & target(s), " +target+"\n");
 		
 		if(results==null){
 			fOut.write("Null Results! \n\n");
@@ -168,6 +184,8 @@ public class SPSM_Test_Cases {
 	@Test
 	//one source w two targets
 	public void test31(){
+		System.out.println("\nRunning test 3.1");
+		
 		source="author(name)";
 		target="document(title,author) ; conferenceMember(name)";
 		
@@ -186,6 +204,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test32(){
+		System.out.println("\nRunning test 3.2");
+		
 		source="author(name)";
 		target="author(name) ; document(title,author)";
 		
@@ -211,6 +231,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test33(){
+		System.out.println("\nRunning test 3.3");
+		
 		source="author(name)";
 		target="author(name) ; document(title,author) ; paperWriter(firstname,surname,paper) ; reviewAuthor(firstname,lastname,review)";
 		
@@ -241,6 +263,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test41(){
+		System.out.println("\nRunning test 4.1");
+		
 		source="author";
 		target="writer";
 		
@@ -266,6 +290,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test42(){
+		System.out.println("\nRunning test 4.2");
+		
 		source="author";
 		target="document";
 		
@@ -284,6 +310,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test43(){
+		System.out.println("\nRunning test 4.3");
+		
 		source="author(name)";
 		target="document(name)";
 		
@@ -302,6 +330,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test44(){
+		System.out.println("\nRunning test 4.4");
+		
 		source="author(name)";
 		target="reviewWriter(review,name)";
 		
@@ -326,6 +356,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test45(){
+		System.out.println("\nRunning test 4.5");
+		
 		source="reviewWriter(document,date,name)";
 		target="author(name,email,coAuthors,writePaper,submitPapers,review)";
 		
@@ -351,6 +383,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test51(){
+		System.out.println("\nRunning test 5.1");
+		
 		source="review(date(day,month,year))";
 		target="document(date(day,month,year))";
 		
@@ -376,6 +410,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test52(){
+		System.out.println("\nRunning test 5.2");
+		
 		source = "review(publication(day,month,year))";
 		target= "review(date(day,month,year))";
 		
@@ -400,6 +436,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test53(){
+		System.out.println("\nRunning test 5.3");
+		
 		source="review(publication(day,month,year))";
 		target= "document(date(day,month,year))";
 		
@@ -418,6 +456,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test54(){
+		System.out.println("\nRunning test 5.4");
+		
 		source="review(category(day,month,year))";
 		target="review(date(day,month,year))";
 		
@@ -441,6 +481,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test55(){
+		System.out.println("\nRunning test 5.5");
+		
 		source="review(category(day,month,year))";
 		target="document(date(day,month,year))";
 		
@@ -465,6 +507,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test56(){
+		System.out.println("\nRunning test 5.6");
+		
 		source="conference(paper(title,review(date(day,month,year),author(name(first,second)))))";
 		target="conference(paper(title,document(date(day,month,year),writer(name(first,second)))))";
 		
@@ -488,6 +532,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test57(){
+		System.out.println("\nRunning test 5.7");
+		
 		source="conference(paper(title,review(date(day,month,year),author(name(first,second)))))";
 		target="conference(paper(title,document(category(day,month,year),writer(name(first,second)))))";
 		
@@ -512,6 +558,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test58(){
+		System.out.println("\nRunning test 5.8");
+		
 		source="conference(paper(title,review(date(day,month,year),author(name(first,second)))))";
 		target="event(paper(title,document(category(day,month,year),writer(name(first,second)))))";
 		
@@ -530,6 +578,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test61(){
+		System.out.println("\nRunning test 6.1");
+		
 		source="conferenceDocument(nameOfAuthor)";
 		target="conferenceReview(authorName)";
 		
@@ -554,6 +604,8 @@ public class SPSM_Test_Cases {
 	
 	@Test 
 	public void test62(){
+		System.out.println("\nRunning test 6.2");
+		
 		source="conference_document(name_of_author)";
 		target="conference_review(author_name)";
 		
@@ -579,6 +631,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test63(){
+		System.out.println("\nRunning test 6.3");
+		
 		source="conference_document(name_of_author)";
 		target="ConferenceReview(authorName)";
 		
@@ -603,6 +657,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test64(){
+		System.out.println("\nRunning test 6.4");
+		
 		source="conference document(name of author)";
 		target="conference review(author name)";
 		
@@ -627,6 +683,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test65(){
+		System.out.println("\nRunning test 6.5");
+		
 		source="conference document(nameOfAuthor)";
 		target="conference review(authorName)";
 		
@@ -651,6 +709,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test66(){
+		System.out.println("\nRunning test 6.6");
+		
 		source="conferencedocument(nameofauthor)";
 		target="conference review(authorname)";
 		
@@ -675,6 +735,8 @@ public class SPSM_Test_Cases {
 	
 	@Test
 	public void test67(){
+		System.out.println("\nRunning test 6.8");
+		
 		source="auto(brand,name,color)";
 		target="car(year,brand,colour)";
 		

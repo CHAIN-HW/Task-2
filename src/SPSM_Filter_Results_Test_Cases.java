@@ -1,6 +1,5 @@
 import static org.junit.Assert.*;
 
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -29,6 +28,10 @@ public class SPSM_Filter_Results_Test_Cases {
 	
 	@BeforeClass
 	public static void beforeAll(){
+		System.out.println("These tests are responsible for testing the output results from Call_SPSM.java & Best_Match_Results.java\n"
+				+ "which makes sure that we get results returned from SPSM that have then been filtered and sorted by CHAIn.");
+		System.out.println("\nThe results from these tests can be found in outputs/tests/Task_1_Tests.txt\n");
+		
 		alreadyWritten = false;
 		counter=1;
 		try{
@@ -50,7 +53,7 @@ public class SPSM_Filter_Results_Test_Cases {
 			fOut = new PrintWriter(new FileWriter(testRes,true));
 			
 			if(alreadyWritten==false){
-				fOut.write("Testing Results for Call_SPSM.java & Best_Match_Results.java\n\n");
+				fOut.write("Testing Results for SPSM_Filter_Results_Test_Cases.java\n\n");
 				alreadyWritten = true;
 			}
 			
@@ -61,6 +64,8 @@ public class SPSM_Filter_Results_Test_Cases {
 	
 	@Test
 	public void successMultiCall(){
+		System.out.println("\nRunning test successMultiCall");
+		
 		source = "author(name)";
 		target = "author(name) ; document(title,author) ; paperWriter(firstname,surname,paper) ; reviewAuthor(firstname,lastname,review)";
 		finalRes = new ArrayList<Match_Struc>();
@@ -71,7 +76,7 @@ public class SPSM_Filter_Results_Test_Cases {
 
 		finalRes = filterResCall.getThresholdAndFilter(finalRes, 0.6, 0);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - success multi call\n");
 		fOut.write("Calling SPSM with source, "+source+" & target, "+target+"\n");
 		fOut.write("Calling with threshold: "+0.6+" & limit: "+0+" \n");
 		
@@ -88,6 +93,8 @@ public class SPSM_Filter_Results_Test_Cases {
 	
 	@Test
 	public void successSingleCall(){
+		System.out.println("\nRunning test successSingleCall");
+		
 		source="author(name)";
 		target="author(name)";
 		finalRes = new ArrayList<Match_Struc>();
@@ -98,7 +105,7 @@ public class SPSM_Filter_Results_Test_Cases {
 
 		finalRes = filterResCall.getThresholdAndFilter(finalRes, 0.6, 0);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - success single call\n");
 		fOut.write("Calling SPSM with source, "+source+" & target, "+target+"\n");
 		fOut.write("Calling with threshold: "+0.6+" & limit: "+0+" \n");
 		
@@ -115,6 +122,8 @@ public class SPSM_Filter_Results_Test_Cases {
 	
 	@Test
 	public void failSingleCall(){
+		System.out.println("\nRunning test failSingleCall");
+		
 		source="author(name)";
 		target="document(title,author)";
 		finalRes = new ArrayList<Match_Struc>();
@@ -122,7 +131,7 @@ public class SPSM_Filter_Results_Test_Cases {
 		finalRes=spsmCall.getSchemas(finalRes, source, target);
 		finalRes = filterResCall.getThresholdAndFilter(finalRes, 0.0, 0);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - fail single call\n");
 		fOut.write("Calling SPSM with source, "+source+" & target, "+target+"\n");
 		fOut.write("Calling with threshold: "+0.0+" & limit: "+0+" \n");
 		
@@ -139,6 +148,8 @@ public class SPSM_Filter_Results_Test_Cases {
 	
 	@Test
 	public void successWithLimit(){
+		System.out.println("\nRunning test successWithLimit");
+		
 		source = "author(name)";
 		target = "author(name) ; document(title,author) ; paperWriter(firstname,surname,paper) ; reviewAuthor(firstname,lastname,review)";
 		finalRes = new ArrayList<Match_Struc>();
@@ -146,7 +157,7 @@ public class SPSM_Filter_Results_Test_Cases {
 		finalRes=spsmCall.getSchemas(finalRes, source, target);
 		finalRes = filterResCall.getThresholdAndFilter(finalRes, 0.0, 2);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - success with limit\n");
 		fOut.write("Calling SPSM with source, "+source+" & target, "+target+"\n");
 		fOut.write("Calling with threshold: "+0.0+" & limit: "+2+" \n");
 		
@@ -163,6 +174,8 @@ public class SPSM_Filter_Results_Test_Cases {
 	
 	@Test
 	public void failWithLimit(){
+		System.out.println("\nRunning test failWithLimit");
+		
 		source="author(name)";
 		target="document(title,author)";
 		finalRes = new ArrayList<Match_Struc>();
@@ -170,7 +183,7 @@ public class SPSM_Filter_Results_Test_Cases {
 		finalRes=spsmCall.getSchemas(finalRes, source, target);
 		finalRes = filterResCall.getThresholdAndFilter(finalRes,0.0,2);
 		
-		fOut.write("Test "+counter+"\n");
+		fOut.write("Test "+counter+" - fail with limit\n");
 		fOut.write("Calling SPSM with source, "+source+" & target, "+target+"\n");
 		fOut.write("Calling with threshold: "+0.0+" & limit: "+2+" \n");
 		

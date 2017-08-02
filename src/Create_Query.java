@@ -1,5 +1,3 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -9,21 +7,14 @@ import java.util.List;
 
 import org.json.*;
 
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.ResultSetFormatter;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.util.FileManager;
-
 /*
- * 
+ *
  * Responsible for using the repaired schema
  * to create either a sepa or dbpedia query, this 
  * query is added as a field onto the Match_Struc 
  * object structure
+ * 
+ * This class is tested in Create_Query_Test_Cases.java
  * 
  */
 public class Create_Query {
@@ -31,53 +22,36 @@ public class Create_Query {
 	public static void main(String [] args){
 		Create_Query queryCreator = new Create_Query();
 		Call_SPSM spsmCall = new Call_SPSM();
-		Best_Match_Results filterResCall = new Best_Match_Results();
 		Repair_Schema getRepairedSchema = new Repair_Schema();
 
-//		String source="surfaceWaterBodies(subBasinDistrict,riverName,altitudeTypology,associatedGroundwaterId,nonsense)";
-//		String target="surfaceWaterBodies(subBasinDistrict,riverName,altitudeTypology,associatedGroundwaterId,nonsense)";
+		//String source="surfaceWaterBodies(subBasinDistrict,riverName,altitudeTypology,associatedGroundwaterId,nonsense)";
+		//String target="surfaceWaterBodies(subBasinDistrict,riverName,altitudeTypology,associatedGroundwaterId,nonsense)";
 		
-		String source="Person(occupation, birthPlace)";
-		String target="Person(occupation, birthPlace)";
+		String source="River(Mountain(elevation))";
+		String target="River(Mountain(elevation))";
 		
 		ArrayList<Match_Struc> finalRes = new ArrayList<Match_Struc>();
 		
-		spsmCall.getSchemas(finalRes, source, target);
-		finalRes = filterResCall.getThresholdAndFilter(finalRes, 0.6, 0);
+		finalRes = spsmCall.getSchemas(finalRes, source, target);
 
 		if(finalRes!=null && finalRes.size()!=0){
 			finalRes = getRepairedSchema.prepare(finalRes);
 		}
 		
-//		finalRes = queryCreator.createQueryPrep(finalRes, "sepa", "queryData/sepa/sepa_datafiles/");
-		finalRes = queryCreator.createQueryPrep(finalRes, "dbpedia", null);
+		//finalRes = queryCreator.createQueryPrep(finalRes, "sepa", "queryData/sepa/sepa_datafiles/",0);
+		finalRes = queryCreator.createQueryPrep(finalRes, "dbpedia", null, 30);
+		
+		System.out.println("\nQuery created is: \n\n" + finalRes.get(0).getQuery());
 	}
 	
 	//sets up ready to create query for each repaired schema in list of match structures
-	public ArrayList<Match_Struc> createQueryPrep(ArrayList<Match_Struc> matchRes, String queryType, String additionalInfo){
+	public ArrayList<Match_Struc> createQueryPrep(ArrayList<Match_Struc> matchRes, String queryType, String datasetDir, int noResults){
 		String type="";
 		
 		//first start off by checking query type required
 		if(queryType == null){
-			//we haven't passed in the query type, prompt user for one
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-			
-			try{
-				//get query type through command line
-				boolean correctType=false;
-				while(!correctType){
-					System.out.println("Please enter the query type (dbpedia or sepa): ");
-					type=reader.readLine().toLowerCase();
-					
-					if(type.equals("dbpedia") || type.equals("sepa")){
-						correctType=true;
-					}
-				}
-				
-				reader.close();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
+			System.out.println("Please enter the type of query you want, either 'sepa' or 'dbpedia' as a parameter");
+			return matchRes;
 		}else{
 			type=queryType;
 		}
@@ -91,15 +65,11 @@ public class Create_Query {
 			//call the appropriate method based
 			//on the type of query
 			if(type.equals("sepa")){
-				query = createSepaQuery(curr, additionalInfo);
+				query = createSepaQuery(curr, datasetDir, noResults);
 				curr.setQuery(query);
-				
-				runSepaQuery(query,additionalInfo,curr);
 			}else{
-				query = createDbpediaQuery(curr);
+				query = createDbpediaQuery(curr, noResults);
 				curr.setQuery(query);
-				
-				runDbpediaQuery(query,curr);
 			}
 		}
 		
@@ -107,7 +77,8 @@ public class Create_Query {
 	}
 	
 	//creates structure for sepa query
-	public String createSepaQuery(Match_Struc matchDetails, String datafileDir){
+	public String createSepaQuery(Match_Struc matchDetails, String datafileDir, int noResults){
+		System.out.println("Creating sepa query");
 		
 		ArrayList<Ontology_Struc> ontologies = new ArrayList<Ontology_Struc>();
 		String query="";
@@ -138,6 +109,12 @@ public class Create_Query {
 				query = query + "\n.}\n";
 			}
 			
+			//final line
+			if(noResults != 0){
+				//set limit
+				query = query + "LIMIT " + noResults;
+			}	
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -146,7 +123,8 @@ public class Create_Query {
 	}
 	
 	//creates structure for dbpedia query
-	public String createDbpediaQuery(Match_Struc matchDetails){
+	public String createDbpediaQuery(Match_Struc matchDetails, int noResults){
+		System.out.println("Creating dbpedia query");
 		
 		ArrayList<Ontology_Struc> ontologies = new ArrayList<Ontology_Struc>();
 		String query="";
@@ -165,18 +143,24 @@ public class Create_Query {
 			//start writing main bulk of query
 			query = query + "\nSELECT DISTINCT*\n"+"WHERE { ?id rdf:type ";
 			
+			String predicate="";
 			for(int j = 0 ; j < ontologies.size() ; j++){
 				Ontology_Struc currentOntology = ontologies.get(j);
 				String[] properties = currentOntology.getProperties();
 				
 				if(!(properties == null)){
-					int index;
-					
-					if((index = Arrays.asList(properties).indexOf(matchDetails.getRepairedSchemaTree().getValue())) != -1){
-						query = query + currentOntology.getName() + ":" + matchDetails.getRepairedSchemaTree().getValue();
+					if((Arrays.asList(properties).indexOf(matchDetails.getRepairedSchemaTree().getValue())) != -1){
+						predicate = currentOntology.getName() + ":" + matchDetails.getRepairedSchemaTree().getValue();
 						break;
 					}
 				}
+				//query = query + currentOntology.getName() + ":" + matchDetails.getRepairedSchemaTree().getValue();
+			}
+			
+			if(predicate.equals("")){
+				return "";
+			}else{
+				query = query + predicate;
 			}
 			
 			//then start getting different parts of data to search for
@@ -190,11 +174,13 @@ public class Create_Query {
 			}
 			
 			//final line
-			query=query+"LIMIT 20";		
+			if(noResults != 0){
+				//set limit
+				query = query + "LIMIT " + noResults;
+			}	
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		
 		
 		return query;
 	}
@@ -288,50 +274,5 @@ public class Create_Query {
 		}
 		
 		return dataDetails;
-	}
-	
-	//runs a sepa query
-	public void runSepaQuery(String query, String datasetToUseDir, Match_Struc currMatchStruc){
-		System.out.println("\nRepaired Schema: "+currMatchStruc.getDatasetSchema());
-		System.out.println("\n\nQuery:\t" + query);
-		
-		//create query object
-		Query queryObj = QueryFactory.create(query);
-		
-		//load model locally
-		String dbDir = datasetToUseDir + currMatchStruc.getRepairedSchemaTree().getValue() + ".n3";
-		Model model = FileManager.get().loadModel(dbDir);
-		
-		//query execution factory
-		QueryExecution queryExec = QueryExecutionFactory.create(queryObj, model);
-		
-		try{	
-			System.out.println("\n\nResults:\n");
-			//execute and print results to console
-			ResultSet results = queryExec.execSelect();
-			ResultSetFormatter.out(System.out, results);		
-		}catch(Exception e){
-			e.printStackTrace();
-		}	
-	}
-	
-	//runs a dbpedia query
-	public void runDbpediaQuery(String query, Match_Struc currMatchStruc){
-		System.out.println("\nRepaired Schema: "+currMatchStruc.getDatasetSchema());
-		System.out.println("\n\nQuery:\t"+query);
-		
-		//create query object
-		Query queryObj = QueryFactory.create(query);
-		QueryExecution qexec = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", queryObj);
-		
-		try{
-			System.out.println("\n\nResults:\n");
-			
-			//execute and print results to console
-			ResultSet results = qexec.execSelect();
-			ResultSetFormatter.out(System.out,results);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 }
