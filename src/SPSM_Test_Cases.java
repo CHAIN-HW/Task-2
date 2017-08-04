@@ -69,7 +69,6 @@ public class SPSM_Test_Cases {
 		
 		fOut.write("Test 1.1\n");
 		fOut.write("Calling SPSM with source, "+source + " & target(s), " +target+"\n");
-		fOut.write("Target: "+target+"\n");
 		
 		if(results == null){
 			fOut.write("Null Results! \n\n");
@@ -163,6 +162,7 @@ public class SPSM_Test_Cases {
 		double[] simValues = {1.0,0.75};
 		
 		fOut.write("Test 2.4\n");
+		fOut.write("Calling SPSM with source, "+source + " & target(s), " +target+"\n");
 		
 		if(results==null){
 			fOut.write("Null Results! \n\n");
@@ -279,7 +279,6 @@ public class SPSM_Test_Cases {
 			if(results.size()>0){
 				Match_Struc res = results.get(0);
 				
-				fOut.write("Target: "+res.getDatasetSchema()+"\n");
 				fOut.write("Expected Result: similarity == 1.0"+" & numMatches == 1 \n");
 				fOut.write("Actual Result: similarity == "+res.getSimValue()+" & numMatches == "+res.getNumMatches()+"\n\n");
 			}else{
@@ -399,7 +398,6 @@ public class SPSM_Test_Cases {
 			if(results.size() > 0){
 				Match_Struc res = results.get(0);
 				
-				fOut.write("Target: "+res.getDatasetSchema()+"\n");
 				fOut.write("Expected Result: similarity == 1.0"+" & numMatches == 5 \n");
 				fOut.write("Actual Result: similarity == "+res.getSimValue()+" & numMatches == "+res.getNumMatches()+"\n\n");			
 			}else{

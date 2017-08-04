@@ -109,7 +109,7 @@ public class Create_Query {
 				query = query + "\n.}\n";
 			}
 			
-			//final line
+			//final line, limit
 			if(noResults != 0){
 				//set limit
 				query = query + "LIMIT " + noResults;
@@ -173,7 +173,7 @@ public class Create_Query {
 				query = query + ".}\n";
 			}
 			
-			//final line
+			//final line, limit
 			if(noResults != 0){
 				//set limit
 				query = query + "LIMIT " + noResults;

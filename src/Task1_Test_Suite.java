@@ -7,7 +7,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ 
 		Match_Results_Test_Cases.class,
 		SPSM_Filter_Results_Test_Cases.class, 
-		SPSM_Test_Cases.class })
+		SPSM_Test_Cases.class 
+})
 
 public class Task1_Test_Suite {
 }
